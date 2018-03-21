@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue学习</title>
+</head>
+<body>
+<div id="app">
+    {{arr[1]}}
+</div>
+<script src="./node_modules/vue/dist/vue.js"></script>
+<script>
+    //vue会循环data中的数据（数据劫持） 以此的增加getter和setter
+    let vm = new Vue({//vm ==viewModel
+        el:'#app',//告诉vue 能管理哪个部分
+        data:{//data中的数据会被vm所代理
+            msg:'hello',
+            arr:[1,2,3,4,5]
+        }
+    });//使用变量式 要先初始化 否则不会触发页面刷新
+   //vm.arr[0]=100;去改变数组中的某一项是监控不到的，也不能使用改变数组长度的方法 错误
+    //变异方法 pop push shift unshift reserve splice sort
+    vm.arr=vm.arr.map(itme=>item*3)//map filter
+</script>
+
+</body>
+</html>

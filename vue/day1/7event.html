@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue学习</title>
+</head>
+<body>
+<div id="app">
+    <!--v-on===@-->
+    <!--如果不传递参数 不要写括号，如果写括号要手动传入$event-->
+ <div @click="fn($event)">点我啊</div>
+</div>
+<script src="./node_modules/vue/dist/vue.js"></script>
+<script>
+    //引入vue后会白给一个Vue构造函数
+    let vm = new Vue({//根实例
+        el:'#app',//告诉vue 能管理哪个部分
+        methods: {//methods和data的数据会全部放到vm上，
+            //名字不能冲突，methods中的this指向的都是实例
+          fn(){alert(this.a)}
+        },
+        data:{//data中的数据会被vm所代理
+            msg:'hello',//可通过vm.msg取到对应的内容,
+            a:33
+        }
+    });//Object.defineProperty
+</script>
+</body>
+</html>
