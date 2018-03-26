@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<div id="app">
+    <!--bootstrap 栅格化布局 默认12列（有的可能是8列或24列）-->
+    <!--常见的样式 基本样式+增强样式-->
+    <!--default 灰色 success 绿色 danger 红色 警告色 黄色 info浅蓝色
+    primary 蓝色-->
+    <!--vue的ui框架 iview，mintui（饿了么），elementui-->
+    <div class="container">
+        <!--每行又有12列-->
+        <div class="row">
+            <table class="table table-hover table-bordered">
+                <caption style="caption-side:top" class="h2 text-danger text-center">我的购物车</caption>
+                <tr>
+                    <!--click点击时 checkbox的状态还没有改变 所以拿到的总是相反的-->
+                    <th>全选 <input type="checkbox" v-model="checkAll" /></th>
+                    <td>商品</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>小计</td>
+                    <td>操作</td>
+                </tr>
+                <tr v-for="(product,index) in products">
+                    <td><input type="checkbox"
+                               v-model="product.isSelected"></td>
+                    <!--在属性里取变量的值，要用v-bind（：）动态绑定数据-->
+                    <td><img :src="product.productCover" :title="product.productName">
+                        {{product.productName}}
+                    </td>
+                    <td>
+                        {{product.productPrice}}
+                    </td>
+                    <td>
+                        <!--.number让输入框的值变为数字 .lazy失去焦点时更新数据 change可以保证值变化后在-->
+                        <input type="number" v-model.number="product.productCount" min="0">
+                    </td>
+                    <!--过滤器 源数据不变的情况下，只改变显示的效果 管道符-->
+                    <td>{{product.productCount*product.productPrice | toFixed(2)}}</td>
+                    <td>
+                        <button class="btn btn-danger" @click="remove(product)">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <!--数据一变化就会调用此函数，不会缓存上一次的结果，computed可以解决这个问题-->
+                    <td colspan="6">总价格：{{sum | toFixed(2)}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="node_modules/vue/dist/vue.js"></script>
+<!--基于promise-->
+<script src="node_modules/axios/dist/axios.js"></script>
+<script>
+    let vm = new Vue({
+        el: '#app',
+        computed: {//放在computed中也会放在vm上，不能重名
+            checkAll: {
+                //当products数据变化时会重新计算
+                get() {//this指向实例 默认v-model会获取checkAll，所以会调get
+                    return this.products.every(p => p.isSelected);
+                },
+                set(val) {//输入框有set
+                    //当我们给checkbox赋值的时候
+                    this.products.forEach(p => p.isSelected = val);
+                }
+            },
+            sum: {//求和函数
+                get() {//sum 的结果会被缓存 如果依赖的数据没有变化 不会重新执行
+                    return this.products.reduce((prev, next) => {
+                        if (!next.isSelected) return prev;
+                        return prev + next.productPrice * next.productCount;
+                    }, 0);
+                }
+            }
+        },
+        filters: {//用来定义过滤器
+            toFixed(input, paraml1) {//这里的this指向window
+                return '￥' + input.toFixed(paraml1);//input代表管道符前面的内容 paraml代表前面的参数
+            }
+        },
+        created() {//在数据被初始化之后会调用，this指向vm实例，钩子函数
+            //专门又来发送Ajax的方法
+            //Promise 解决回调
+            this.getData();
+        }, methods: {
+            remove(p) {
+                this.products = this.products.filter(item => item !== p);
+            }//p代表当前点击的这一项
+            ,
+            getData() {//初始化方法
+                axios.get('./carts.json').then(res => {//success
+                    this.products = res.data;//拿到数据需要的事res.data
+                    this.checkOne();//数据加载完成时给checkAll
+                }, err => {//error
+                    console.log(err);
+                })
+            }},
+            data: {
+                products: []
+            }
+    })
+</script>
+</body>
+</html>
