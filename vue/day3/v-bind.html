@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .x{background: blue}
+        .y{font-size: 30px}
+        .z{color:pink}
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--class和：class不冲突-->
+    <!--1）className：value-->
+    <div class="x y" :class="{z:flag}"></div>
+    <div class="x y" :class="[class1,class2,{z:false}]"></div>
+    <div v-for="(a,index) in 10" :class="{x:index%2}">{{a}}</div>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    //class="a b c" style=""
+    //第一种方式是对象 第二种方式是数组
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            class1:'x',
+            clsaa2:"y",
+           flag:true
+        }
+    })
+</script>
+</body>
+</html>

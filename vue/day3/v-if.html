@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <!--template 是vue提供用来包裹元素的，不支持v-show只有v-if使用-->
+    <template v-if="true">
+        <div>yes</div>
+        <div>yes</div>
+        <div>yes</div>
+        <div>yes</div>
+    </template>
+    <!--默认情况下切换dom时，相同的结构会被复用 如不需复用，需要加key-->
+    <button @click="cut=!cut">点我</button>
+    <template v-if="cut">
+        <label>登录</label>
+        <input type="text" :key="1">
+    </template>
+    <template v-else :key="2">
+        <label>注册</label>
+        <input type="text">
+    </template>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    let vm = new Vue({
+        el:'#app',
+        data:{
+           cut:true
+        }
+    })
+</script>
+</body>
+</html>
