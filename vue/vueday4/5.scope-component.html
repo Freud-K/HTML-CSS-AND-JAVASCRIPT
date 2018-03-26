@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <handsome></handsome>
+    <component1></component1>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    //局部组件使用的三部 1.创建这组件 2.注册这个组件 3.引用这个组件
+    //组件是相互独立的 不能直接跨作用域 vm的实例也是一个组件 组件中拥有生命周期函数
+    //子组件不能直接使用父组件的数据（组件之间的数据交互）
+    //如果组件公用了数据 则失去独立性
+    //组件理论上可以无限嵌套
+    let obj={
+        school:'HIT'
+    };
+    let handsome = {
+        template:'<div>组件一{{school}}</div>',
+        data(){
+            return obj;
+        },
+    };
+    let component1={
+        template:'<div @click="fn">组件二{{school}}</div>',
+        data(){
+            return obj;
+        },
+        methods:{
+            fn(){
+                this.school='X';
+            }
+        }
+    };
+
+    let vm = new Vue({
+        el:'#app',
+        components:{
+            handsome:handsome,//es6规则 同名写一个
+            component1:component1
+        },
+        data:{
+            a:1
+        }
+    })
+</script>
+</body>
+</html>

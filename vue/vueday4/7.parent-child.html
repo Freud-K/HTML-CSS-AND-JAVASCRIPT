@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    父亲:{{money}}
+    <child :m="money"></child>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    //父传子
+    // <--当前组件的属性=父亲的值-->
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            money: 100
+        },
+        components: {
+            child: {
+                template: '<div>儿子{{m}}</div>',
+                //props:['m']//this.m=100;会声明在当前组件上
+                props: {//校验时不能阻断代码 只会警告
+                    m: {//不带冒号得到的是字符串 ：key=“value”
+                        type: [String, Boolean, Function, Object, Array, Number],//类型校验
+                       // default:0//可以给m赋予默认值，如果不传会默认使用default，属性名不能重名
+                        required:true,//此属性必须传递，但是不能和default同用
+                        validator(val){//第一个参数是当前传递的值 返回true表示通过，自定义校验器
+
+                        }
+                    }
+                }//对象的形式可以校验
+            }
+        }
+    })
+</script>
+</body>
+</html>
